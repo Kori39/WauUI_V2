@@ -2,14 +2,13 @@ import { Video } from "expo-av";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
-  Animated,
   Dimensions,
   Image,
   ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { kitePattern } from "../lib/kitePattern";
 import { kiteShapeImage } from "../lib/kiteShapeImage";
@@ -32,7 +31,7 @@ export default function PatternStep() {
   // Animation state (always declared at top!)
   const [showSelectAnimation, setShowSelectAnimation] = useState(false);
   const fadeInRef = useRef(null);
-  const videoFadeAnim = useRef(new Animated.Value(1)).current;
+  // const videoFadeAnim = useRef(new Animated.Value(1)).current;
   const [videoKey, setVideoKey] = useState(0);
 
   useEffect(() => {
@@ -78,7 +77,7 @@ export default function PatternStep() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1,backgroundColor:"#e7dbc6ff"}}>
       {/* Background */}
       <ImageBackground
         source={require("../assets/images/bg/background4.jpg")}
@@ -178,7 +177,7 @@ export default function PatternStep() {
 
       {/* Transition Video */}
       {showSelectAnimation && (
-        <Animated.View style={[styles.fullscreen, { opacity: videoFadeAnim }]}>
+        // <Animated.View style={[styles.fullscreen, { opacity: videoFadeAnim }]}>
           <Video
             ref={fadeInRef}
             key={`fadein-${videoKey}`}
@@ -195,14 +194,18 @@ export default function PatternStep() {
               }
             }}
           />
-        </Animated.View>
+        // </Animated.View>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", justifyContent: "center" },
+  container: { 
+    flex: 1, 
+    alignItems: "center", 
+    justifyContent: "center",
+  },
   background: {
     flex: 1,
     width: "100%",

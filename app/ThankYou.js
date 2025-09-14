@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     height:"102%",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor:"#000000ff"
   },
   count: {
     top:20,

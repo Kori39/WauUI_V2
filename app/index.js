@@ -55,7 +55,7 @@ export default function HomeScreen() {
 
     Animated.timing(tapFadeAnim, {
       toValue: 0,
-      duration: 800,
+      duration: 100,
       useNativeDriver: true,
     }).start(() => {
       connectWebSocket();
@@ -72,10 +72,10 @@ export default function HomeScreen() {
         {/* Fullscreen Video */}
         <Video
           source={require('../assets/vid/Intro.mp4')}
-          style={styles.videoBackground}
+          style={[styles.videoBackground,{ backgroundColor: "#3a3a39ff" }]}
           resizeMode="cover"
           shouldPlay
-          isMuted
+          isMuteds
            isLooping={false} // play only once
   rate={1.5} // speed up the video by 25%
           onPlaybackStatusUpdate={(status) => {
@@ -119,7 +119,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#aa9674ff',
   },
   videoBackground: {
     position: 'absolute',

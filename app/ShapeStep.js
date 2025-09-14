@@ -5,15 +5,16 @@ import { useCallback, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
-  Easing,
   Image,
   ImageBackground,
   PanResponder,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { kiteShapeImage } from "../lib/kiteShapeImage";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -109,18 +110,36 @@ export default function KiteShapeStep() {
     });
   };
 
+  const hasPlayedIntro = useRef(false);
+
+useFocusEffect(
+  useCallback(() => {
+    if (hasPlayedIntro.current) {
+      // Already played once → show kite directly
+      setShowBookFlip(false);
+      setShowKite(true);
+    } else {
+      // First entry → play book flip
+      setShowBookFlip(true);
+      setShowKite(false);
+      hasPlayedIntro.current = true;
+    }
+    setShowSelectAnimation(false);
+  }, [])
+);
+
   // ---------- Screen Fade-in ----------
-  useFocusEffect(
-    useCallback(() => {
-      overlayOpacity.setValue(1);
-      Animated.timing(overlayOpacity, {
-        toValue: 0,
-        duration: 1000,
-        easing: Easing.inOut(Easing.ease),
-        useNativeDriver: true,
-      }).start();
-    }, [])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     overlayOpacity.setValue(1);
+  //     Animated.timing(overlayOpacity, {
+  //       toValue: 0,
+  //       duration: 1000,
+  //       easing: Easing.inOut(Easing.ease),
+  //       useNativeDriver: true,
+  //     }).start();
+  //   }, [])
+  // );
 
   if (!fontsLoaded) return null;
 
@@ -140,19 +159,27 @@ export default function KiteShapeStep() {
   return (
     <View style={styles.container} {...panResponder.panHandlers}>
       {/* White overlay fade-in */}
-      <Animated.View
+      {/* <Animated.View
         pointerEvents="none"
         style={[
           StyleSheet.absoluteFill,
           { backgroundColor: "white", opacity: overlayOpacity, zIndex: 9999 },
         ]}
-      />
+      /> */}
 
       <ImageBackground
         source={require("../assets/images/bg/background2.jpg")}
         style={styles.fullscreen}
         resizeMode="cover"
       >
+        <View style={styles.scrollIndicator}>
+          <Image
+            source={require("../assets/images/icons/Hand.gif")}
+            style={styles.hand}
+          />
+          <Text style={styles.indicatorText}>Swipe to switch Waus!</Text>
+        </View>
+
         {/* Book Flip Animation */}
         {showBookFlip && (
           <Animated.View style={[styles.fullscreen, { opacity: videoFadeAnim }]}>
@@ -213,7 +240,7 @@ export default function KiteShapeStep() {
               ref={fadeInRef}
               key={`fadein-${videoKey}`}
               source={require("../assets/vid/bg2.mp4")}
-              style={styles.fullscreen}
+              style={[styles.fullscreen,{ backgroundColor: "#e7dbc6ff" }]}
               resizeMode="cover"
               isLooping={false}
               isMuted
@@ -235,7 +262,7 @@ export default function KiteShapeStep() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffffff",
+    backgroundColor:"#bba993ff",
     position: "relative",
   },
   fullscreen: {
@@ -305,4 +332,27 @@ const styles = StyleSheet.create({
     height: (width * 0.4 * 50) / 120,
     resizeMode: "contain",
   },
+  scrollIndicator:{
+    position:"absolute",
+    width:100,
+    height:100,
+    top:180,
+    right:40,
+    flexDirection:"column",
+    alignItems:"center",
+    justifyContent:"center",
+    transform: [{ rotate: "15deg" }],
+  },
+  hand :{
+    height:"40%",
+    resizeMode:"contain",
+    opcaity:0.5,
+  },
+  indicatorText:{
+    fontFamily: 'DKSnippitySnap',
+    fontSize:12,
+    color: '#350b0bff',
+    opacity: 0.5,
+    textAlign:"center",
+  }
 });

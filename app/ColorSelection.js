@@ -239,7 +239,7 @@ export default function ColorSelection() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1, backgroundColor: "#e7dbc6ff" },
   background: { flex: 1, width: "100%", height: "100.6%", position: "absolute" },
 
   headerImage: {
@@ -308,6 +308,7 @@ selectedOverlay: {
   width: "100%",
   height: "100%",
   zIndex: 3, // ensures it's above thumb
+  // backgroundColor:"#000000ff",
 },
 thumbImage: { width: "80%", height: "80%", resizeMode: "contain" },
 
@@ -356,12 +357,14 @@ presetSlot: {
 
   // Popup
   popupOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.81)",
+    flex:1,
+    backgroundColor: "rgba(0, 0, 0, 0.14)",
     justifyContent: "center",
     alignItems: "center",
   },
   popupBox: {
+    position: "absolute",
+    top:100,
     width: width * 1.2,
     height: height * 0.75,
     justifyContent: "flex-start",
