@@ -239,8 +239,8 @@ export default function ColorSelection() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#e7dbc6ff" },
-  background: { flex: 1, width: "100%", height: "100.6%", position: "absolute" },
+  container: { flex: 1, backgroundColor: "#e7dbc6ff" ,    overflow: "hidden",},
+  background: { flex: 1, width: "101%", height: "100.6%", position: "absolute", left:-4, },
 
   headerImage: {
     position: "absolute",
@@ -314,16 +314,15 @@ thumbImage: { width: "80%", height: "80%", resizeMode: "contain" },
 
 presetsContainer: {
   position: "absolute",
-  bottom: scaleHeight(180),
   width: "100%",
   alignItems: "center",
   justifyContent: "center",
-  bottom:height*0.28,
+  bottom:height*0.26,
 },
 
 presetsBackground: {
   position: "absolute",
-  left:25,
+  left:28,
   width: width * 0.9,    // adjust so it matches the total width of your presets
   resizeMode:"contain",
 },
@@ -337,7 +336,7 @@ presetsRow: {
 presetSlot: {
   width: width * 0.165,
   aspectRatio: 1,
-  marginHorizontal: 1.7,
+  marginHorizontal: 2,
   borderWidth: 2,
   borderColor: "transparent",
   justifyContent: "center",
@@ -374,7 +373,7 @@ presetSlot: {
   popupBackButton: {
     position: "absolute",
     top: height * 0.13,
-    left: width * 0.85,
+    left: width * 0.82,
     width: 40,
     height: 40,
     zIndex: 10,

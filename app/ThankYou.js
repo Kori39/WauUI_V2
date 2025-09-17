@@ -1,38 +1,61 @@
+import { useFonts } from "expo-font";
 import { useLocalSearchParams } from "expo-router";
-import { ImageBackground, StyleSheet } from "react-native";
+import { Image, ImageBackground, StyleSheet, Text, View, } from "react-native";
 
 const ThankYouScreen = () => {
-  const { playerCollision, birdCollision } = useLocalSearchParams();
+  const { playerCount, birdCount, finalPlayer, finalBird } = useLocalSearchParams();
+    const [fontsLoaded] = useFonts({
+      DKSnippitySnap: require("../assets/fonts/DKSnippitySnap.ttf"),
+    });
 
-  // Parse params safely
-  let parsedPlayer = [];
-  let parsedBird = [];
+  const playerCountNum = Number(playerCount) || 0;
+  const birdCountNum = Number(birdCount) || 0;
+
+  let parsedFinalPlayer = null;
+  let parsedFinalBird = null;
 
   try {
-    parsedPlayer = playerCollision ? JSON.parse(playerCollision) : [];
+    parsedFinalPlayer = finalPlayer ? JSON.parse(finalPlayer) : null;
   } catch (e) {
-    console.warn("Failed to parse playerCollision", e);
+    console.warn("Failed to parse finalPlayer", e);
   }
 
   try {
-    parsedBird = birdCollision ? JSON.parse(birdCollision) : [];
+    parsedFinalBird = finalBird ? JSON.parse(finalBird) : null;
   } catch (e) {
-    console.warn("Failed to parse birdCollision", e);
+    console.warn("Failed to parse finalBird", e);
   }
 
-  // Count values
-  const playerCount = Array.isArray(parsedPlayer) ? parsedPlayer.length : 0;
-  const birdCount = Array.isArray(parsedBird) ? parsedBird.length : 0;
-
+  if (!fontsLoaded) return null;
   return (
-    <ImageBackground
-      source={require("../assets/images/frame/ThankYou.png")}
-      style={styles.container}
-      resizeMode="cover"
-    >
-      {/* <Text style={styles.count}>Player Collisions: {playerCount}</Text>
-      <Text style={styles.count}>Bird Collisions: {birdCount}</Text> */}
-    </ImageBackground>
+    <View style={styles.container}>
+      <ImageBackground
+        source={require("../assets/images/frame/ThankYou.png")}
+        style={styles.background}
+        resizeMode="cover"
+      >
+        <Image
+          source={require("../assets/images/frame/flightComplete.png")}
+          style={styles.note}
+          resizeMode="cover"
+        />
+        <View style={styles.textBox}>
+          <Text style={styles.count}>Player Collisions: {playerCountNum}</Text>
+          <Text style={styles.count}>Bird Collisions: {birdCountNum}</Text>
+
+          {parsedFinalPlayer && (
+            <Text style={styles.count}>
+              Final Player Collision: {JSON.stringify(parsedFinalPlayer)}
+            </Text>
+          )}
+          {parsedFinalBird && (
+            <Text style={styles.count}>
+              Final Bird Collision: {JSON.stringify(parsedFinalBird)}
+            </Text>
+          )}
+        </View>
+      </ImageBackground>
+    </View>
   );
 };
 
@@ -41,16 +64,36 @@ export default ThankYouScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height:"102%",
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor:"#000000ff"
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  background: {
+    flex: 1,
+    left: -4,
+    width: "101.5%",
+    height: "100.7%",
+    position: "absolute",
+    overflow: "hidden",
+  },
+  note:{
+    height:"70%",
+    width:"100%",
+    resizeMode:"contain",
+    alignSelf:"center",
+    marginTop: 100, 
+  },
+  textBox:{
+    position: "absolute",
+    alignSelf: "center",
+    justifyContent:"center", 
+    marginTop: 345, 
+    transform: [{ rotate: "-3deg" }],
   },
   count: {
-    top:20,
+    fontFamily: "DKSnippitySnap",
     fontSize: 16,
-    fontWeight: "700",
     marginVertical: 4,
-    color: "#5B4129", // white text for contrast
+    color: "#402e1dff",
   },
 });

@@ -4,21 +4,28 @@ import { useEffect, useRef, useState } from "react";
 import {
   Image,
   ImageBackground,
-  Modal,
-  SafeAreaView,
+  Modal, Platform, SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
+import { useFonts } from "expo-font";
 import { disconnectWebSocket } from "../components/WebSocket/web-socket-manager";
 import { sendCollisionRequest } from "../utils/sendActionMsg";
 
 import GyroDot from "./Gyro";
+import GyroDotWeb from "./gyroWeb"; // web version (deviceorientation)
 import TouchPad from "./TouchPad";
 
+const GyroComponent = Platform.OS === "web" ? GyroDotWeb : GyroDot;
+
 export default function FlightControlPrototype() {
+    const [fontsLoaded] = useFonts({
+      DKSnippitySnap: require("../assets/fonts/DKSnippitySnap.ttf"),
+    });
+
   const [useGyro, setUseGyro] = useState(false);
   const router = useRouter();
   const { kitePattern } = useLocalSearchParams();
@@ -77,6 +84,8 @@ export default function FlightControlPrototype() {
     return `${m}:${s}`;
   };
 
+  if (!fontsLoaded) return null;
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" translucent />
@@ -110,34 +119,49 @@ export default function FlightControlPrototype() {
           </TouchableOpacity>
         </View>
 
-        {/* Control Area */}
+       {/* Control Area */}
         <View style={styles.controlArea}>
-          {useGyro ? (
-            <GyroDot kitePattern={kitePattern} />
-          ) : (
+          {Platform.OS === "web" ? (
+            // Web: always TouchPad, no toggle
             <TouchPad kitePattern={kitePattern} />
+          ) : (
+            // Native: toggle between gyro and joystick
+            useGyro ? (
+              <GyroComponent kitePattern={kitePattern} />
+            ) : (
+              <TouchPad kitePattern={kitePattern} />
+            )
           )}
+    
         </View>
 
-        {/* Bottom Container */}
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={toggleControl} style={styles.toggleButton}>
-            <Image
-              source={
-                useGyro
-                  ? require("../assets/controls/GyroOn.png")
-                  : require("../assets/controls/JoystickOn.png")
-              }
-              style={styles.toggleBox}
-            />
-          </TouchableOpacity>
-
-          <View style={styles.header}>
+        <View style={styles.header}>
             <Text style={styles.subtitle}>
               {useGyro ? "Tilt your phone to control." : "Move Wau as joystick."}
             </Text>
-          </View>
         </View>
+
+        {/* Bottom Container */}
+        {Platform.OS !== "web" && (
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity onPress={toggleControl} style={styles.toggleButton}>
+              <Image
+                source={
+                  useGyro
+                    ? require("../assets/controls/GyroOn.png")
+                    : require("../assets/controls/JoystickOn.png")
+                }
+                style={styles.toggleBox}
+              />
+            </TouchableOpacity>
+{/* 
+            <View style={styles.header}>
+              <Text style={styles.subtitle}>
+                {useGyro ? "Tilt your phone to control." : "Move Wau as joystick."}
+              </Text>
+            </View> */}
+          </View>
+        )}
 
         {/* End Flight Popup */}
         <Modal
@@ -151,7 +175,7 @@ export default function FlightControlPrototype() {
               source={require("../assets/images/frame/endFlightPopup.png")}
               style={styles.popupBox}
               resizeMode="contain"
-            >
+            ></ImageBackground>
               <View style={styles.buttonHolder}>
                 {/* Yes button */}
                 <TouchableOpacity
@@ -177,7 +201,7 @@ export default function FlightControlPrototype() {
                   />
                 </TouchableOpacity>
               </View>
-            </ImageBackground>
+
           </View>
         </Modal>
       </ImageBackground>
@@ -190,7 +214,8 @@ container: {
   flex: 1,
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor:"#000000ff"
+  backgroundColor:"#000000ff",
+  overflow: "hidden",
 },
 background: {
   flex: 1,
@@ -200,16 +225,20 @@ background: {
   alignItems: "center",
 },
 header: {
+  position:"absolute",
+  width:"100%",
+  height:60,
   alignItems: "center",
+  bottom:100,
 },
 title: {
   fontSize: 24,
   fontWeight: "bold",
 },
 subtitle: {
-  fontSize: 16,
-  fontWeight:"bold",
-  color: "#666",
+  fontFamily: "DKSnippitySnap",
+  fontSize: 18,
+  color: "#3a2929ff",
 },
 topContainer:{
   position:"absolute",
@@ -246,6 +275,7 @@ endButtonHolder: {
   width: "40%",
   alignItems: "center",
   justifyContent:"center",
+  zIndex:999,
 },
 endButton:{
   position: "absolute",
@@ -253,6 +283,7 @@ endButton:{
   height: undefined,  // let aspectRatio control height
   aspectRatio: 2.2,     // adjust based on your image proportions
   resizeMode: "contain",
+  zIndex:999,
 
 },
 controlArea: {
@@ -265,7 +296,7 @@ bottomContainer:{
   width: "100%",
   alignItems: "center",   // center children horizontally
   justifyContent: "center", // center vertically
-  bottom: 100, 
+  bottom: 120, 
 },
 toggleButton: {
   width: "80%",
@@ -280,22 +311,25 @@ popupOverlay: {
   justifyContent: "center",
   alignItems: "center",
   padding: 20,
+  
 },
 
 popupBox: {
   width: "100%",      // responsive sizing
-  aspectRatio: 1.2,  // keep frame proportion
-  justifyContent: "flex-end",
+  height: 250,
+  aspectRatio: 1,  // keep frame proportion
   alignItems: "center",
+  alignSelf:"center",
+  position:"absolute",
 },
 
 buttonHolder: {
+  justifyContent:"center",
   flexDirection: "row",
-  justifyContent: "space-evenly",
   alignItems: "center",
-  width: "80%",
+  width: "60%",
   position: "absolute",
-  bottom: "30%",   // moves buttons up from bottom of frame
+  bottom:300,   // moves buttons up from bottom of frame
 },
 
 popupButton: {

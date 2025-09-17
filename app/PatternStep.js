@@ -205,12 +205,15 @@ const styles = StyleSheet.create({
     flex: 1, 
     alignItems: "center", 
     justifyContent: "center",
+    overflow: "hidden",
   },
   background: {
     flex: 1,
-    width: "100%",
+    left:-4,
+    width: "101.5%",
     height: "100.6%",
     position: "absolute",
+    overflow: "hidden",
   },
   colorPaper: {
     position: "absolute",
@@ -248,31 +251,30 @@ const styles = StyleSheet.create({
   },
   patternContainer: {
     position: "absolute",
-    bottom: scaleHeight(170),
+    bottom: scaleHeight(270),
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     zIndex: 20,
     width: "100%",
     paddingHorizontal: scaleWidth(20),
-    marginBottom: 45,
   },
   patternImage: {
     width: scaleWidth(210),
     height: scaleHeight(145),
     marginHorizontal: scaleWidth(-20),
     resizeMode: "contain",
-    top: scaleHeight(35),
+    top: scaleHeight(120),
   },
   selectButton: {
     position: "absolute",
-    bottom: scaleHeight(110),
+    bottom: scaleHeight(80),
     alignSelf: "center",
     width: scaleWidth(150),
     height: scaleHeight(50),
     zIndex: 999,
   },
-  selectButtonImage: { width: "100%", height: "100%", zIndex: 999 },
+  selectButtonImage: { width: "100%", height: "100%", zIndex: 999, },
   headerImage: {
     position: "absolute",
     top: scaleHeight(130),
@@ -280,6 +282,7 @@ const styles = StyleSheet.create({
     width: width,
     height: scaleHeight(45),
     zIndex: 999,
+    
   },
   fullscreen: {
     position: "absolute",
@@ -288,5 +291,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     zIndex: 2000,
+    
   },
 });
